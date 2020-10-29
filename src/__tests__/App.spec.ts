@@ -50,26 +50,26 @@ describe('App', () => {
     );
   });
 
-  // it('should not be able to create a customer with one e-mail thats already registered', async () => {
-  //   const customer = await request(app).post('/customers').send({
-  //     name: 'Rocketseat',
-  //     email: 'oi@rocketseat.com.br',
-  //   });
+  it('should not be able to create a customer with one e-mail thats already registered', async () => {
+    const customer = await request(app).post('/customers').send({
+      name: 'Rocketseat',
+      email: 'oi@rocketseat.com.br',
+    });
 
-  //   expect(customer.body).toEqual(
-  //     expect.objectContaining({
-  //       name: 'Rocketseat',
-  //       email: 'oi@rocketseat.com.br',
-  //     }),
-  //   );
+    expect(customer.body).toEqual(
+      expect.objectContaining({
+        name: 'Rocketseat',
+        email: 'oi@rocketseat.com.br',
+      }),
+    );
 
-  //   const response = await request(app).post('/customers').send({
-  //     name: 'Rocketseat',
-  //     email: 'oi@rocketseat.com.br',
-  //   });
+    const response = await request(app).post('/customers').send({
+      name: 'Rocketseat',
+      email: 'oi@rocketseat.com.br',
+    });
 
-  //   expect(response.status).toBe(400);
-  // });
+    expect(response.status).toBe(400);
+  });
 
   // it('should be able to create a new product', async () => {
   //   const response = await request(app).post('/products').send({
