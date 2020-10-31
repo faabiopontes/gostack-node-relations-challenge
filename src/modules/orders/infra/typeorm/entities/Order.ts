@@ -3,7 +3,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
+  OneToOne,
   JoinColumn,
   OneToMany,
 } from 'typeorm';
@@ -13,15 +13,19 @@ import OrdersProducts from '@modules/orders/infra/typeorm/entities/OrdersProduct
 
 @Entity('orders')
 class Order {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(_ => Customer, customer => customer.id)
-  @JoinColumn()
+  @OneToOne(() => Customer, {
+    eager: true,
+  })
+  @JoinColumn({ name: 'customer_id' })
   customer: Customer;
 
-  @OneToMany(_ => OrdersProducts, ordersProducts => ordersProducts.id)
-  @JoinColumn()
+  @OneToMany(() => OrdersProducts, order_products => order_products.order, {
+    cascade: true,
+    eager: true,
+  })
   order_products: OrdersProducts[];
 
   @CreateDateColumn()

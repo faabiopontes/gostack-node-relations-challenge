@@ -1,4 +1,4 @@
-import { getRepository, Repository, In } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 
 import IProductsRepository from '@modules/products/repositories/IProductsRepository';
 import ICreateProductDTO from '@modules/products/dtos/ICreateProductDTO';
@@ -43,7 +43,20 @@ class ProductsRepository implements IProductsRepository {
   public async updateQuantity(
     products: IUpdateProductsQuantityDTO[],
   ): Promise<Product[]> {
-    // TODO
+    const updatedProducts = [] as Product[];
+    await products.forEach(async product => {
+      const foundProduct = await this.ormRepository.findOne({
+        where: { id: product.id },
+      });
+      if (!foundProduct) {
+        return;
+      }
+      const updatedProduct = { ...foundProduct } as Product;
+      updatedProduct.quantity -= product.quantity;
+      await this.ormRepository.save(updatedProduct);
+      updatedProducts.push(updatedProduct);
+    });
+    return updatedProducts;
   }
 }
 

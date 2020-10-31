@@ -11,16 +11,19 @@ import {
 import Order from '@modules/orders/infra/typeorm/entities/Order';
 import Product from '@modules/products/infra/typeorm/entities/Product';
 
-@Entity()
+@Entity('orders_products')
 class OrdersProducts {
-  @CreateDateColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(_ => Order, order => order.id)
+  @ManyToOne(() => Order, order => order.order_products)
+  @JoinColumn({ name: 'order_id' })
   order: Order;
 
-  @ManyToOne(_ => Product, product => product.id)
-  @JoinColumn()
+  @ManyToOne(() => Product, product => product.order_products, {
+    eager: true,
+  })
+  @JoinColumn({ name: 'product_id' })
   product: Product;
 
   @Column()
@@ -29,16 +32,16 @@ class OrdersProducts {
   @Column()
   order_id: string;
 
-  @Column()
+  @Column('decimal', { precision: 10, scale: 2 })
   price: number;
 
-  @Column()
+  @Column('int')
   quantity: number;
 
-  @UpdateDateColumn()
+  @CreateDateColumn()
   created_at: Date;
 
-  @PrimaryGeneratedColumn()
+  @UpdateDateColumn()
   updated_at: Date;
 }
 
